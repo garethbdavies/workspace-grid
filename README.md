@@ -22,7 +22,7 @@ All settings are under the `workspace-grid` prefix in your `settings.json`.
 "workspace-grid.columns": 4,
 "workspace-grid.terminals": [
   { "name": "D.A.R.Y.L.",      "command": "", "icon": "server",   "color": "terminal.ansiGreen"   },
-  { "name": "ROBOTCOP",        "command": "", "icon": "git-merge","color": "terminal.ansiYellow"  },
+  { "name": "ROBOCOP",        "command": "", "icon": "git-merge","color": "terminal.ansiYellow"  },
   { "name": "HAL 9000",        "command": "", "icon": "beaker",   "color": "terminal.ansiCyan"    },
   { "name": "R2D2",            "command": "", "icon": "terminal", "color": "terminal.ansiWhite"   },
   { "name": "OPTIMUS PRIME",   "command": "", "icon": "package",  "color": "terminal.ansiMagenta" },
