@@ -119,22 +119,59 @@ async function openChatGrid() {
         }
     }
 
-    // Phase 2: distribute chats from group 1 to groups 2, 3, ..., opened.
-    // We process in ASCENDING group order so every intermediate group already
-    // holds a chat when we pass through it. This means no group ever hits zero
-    // editors and VS Code never collapses the layout.
+    // Phase 2: distribute chats from their source group to all other groups.
+    // Different AI extensions open in different groups (some use group 1, some
+    // use the last group), so we detect the source by finding which group has
+    // the most tabs after Phase 1.
     //
-    // Each iteration: return focus to group 1 (its active tab is the
-    // most-recently-opened remaining chat), then walk it right to targetGroup.
-    // After the active tab leaves group 1, VS Code activates the next-rightmost
-    // tab there automatically, ready for the next iteration.
-    for (let targetGroup = 2; targetGroup <= opened; targetGroup++) {
-        await vscode.commands.executeCommand('workbench.action.focusFirstEditorGroup');
-        await delay(250);
+    // We process in the direction that keeps every intermediate group populated,
+    // so no group ever hits zero editors and VS Code never collapses the layout.
+    //   Source = group 1   -> distribute forward  (ascending:  2, 3, ..., N)
+    //   Source = last group -> distribute backward (descending: N-1, N-2, ..., 1)
+    await delay(300);
+    const allGroups = vscode.window.tabGroups.all;
+    let sourceGroupIdx = 0;
+    let maxTabs = 0;
+    for (let g = 0; g < allGroups.length; g++) {
+        if (allGroups[g].tabs.length > maxTabs) {
+            maxTabs = allGroups[g].tabs.length;
+            sourceGroupIdx = g;
+        }
+    }
+    const sourceGroup = sourceGroupIdx + 1; // 1-indexed DFS
 
-        for (let m = 0; m < targetGroup - 1; m++) {
-            await vscode.commands.executeCommand('workbench.action.moveEditorToNextGroup');
-            await delay(200);
+    const focusCmds = [
+        'workbench.action.focusFirstEditorGroup',
+        'workbench.action.focusSecondEditorGroup',
+        'workbench.action.focusThirdEditorGroup',
+        'workbench.action.focusFourthEditorGroup',
+        'workbench.action.focusFifthEditorGroup',
+        'workbench.action.focusSixthEditorGroup',
+        'workbench.action.focusSeventhEditorGroup',
+        'workbench.action.focusEighthEditorGroup',
+    ];
+    const focusSource = focusCmds[sourceGroupIdx];
+
+    if (sourceGroup === 1) {
+        // Distribute forward: move chats from group 1 to groups 2, 3, ..., N
+        for (let target = 2; target <= opened; target++) {
+            await vscode.commands.executeCommand(focusSource);
+            await delay(250);
+            for (let m = 0; m < target - 1; m++) {
+                await vscode.commands.executeCommand('workbench.action.moveEditorToNextGroup');
+                await delay(200);
+            }
+        }
+    } else {
+        // Distribute backward: move chats from sourceGroup to groups N-1, N-2, ..., 1
+        for (let target = sourceGroup - 1; target >= 1; target--) {
+            await vscode.commands.executeCommand(focusSource);
+            await delay(250);
+            const moves = sourceGroup - target;
+            for (let m = 0; m < moves; m++) {
+                await vscode.commands.executeCommand('workbench.action.moveEditorToPreviousGroup');
+                await delay(200);
+            }
         }
     }
 

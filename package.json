@@ -2,7 +2,7 @@
     "name": "workspace-grid",
     "displayName": "Workspace Grid",
     "description": "Opens terminals or AI chat panels in a configurable grid layout with a single command",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "publisher": "colossal",
     "license": "CC-BY-NC-4.0",
     "icon": "icon.png",
