@@ -1,0 +1,4 @@
+*.vsix
+*.stackdump
+.gitignore
+.vscodeignore

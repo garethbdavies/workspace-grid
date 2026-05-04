@@ -1,0 +1,3 @@
+*.vsix
+*.stackdump
+node_modules/

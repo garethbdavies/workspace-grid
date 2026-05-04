@@ -1,0 +1,95 @@
+{
+    "name": "workspace-grid",
+    "displayName": "Workspace Grid",
+    "description": "Opens terminals or AI chat panels in a configurable grid layout with a single command",
+    "version": "1.0.0",
+    "publisher": "colossal",
+    "license": "CC-BY-NC-4.0",
+    "icon": "icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/garethbdavies/workspace-grid"
+    },
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": ["Other"],
+    "activationEvents": [],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "workspace-grid.openTerminalGrid",
+                "title": "Open Terminal Grid",
+                "category": "Workspace Grid"
+            },
+            {
+                "command": "workspace-grid.openChatGrid",
+                "title": "Open Chat Grid",
+                "category": "Workspace Grid"
+            }
+        ],
+        "configuration": {
+            "title": "Workspace Grid",
+            "properties": {
+                "workspace-grid.rows": {
+                    "type": "integer",
+                    "default": 2,
+                    "minimum": 1,
+                    "maximum": 6,
+                    "description": "Number of rows in the terminal grid"
+                },
+                "workspace-grid.columns": {
+                    "type": "integer",
+                    "default": 4,
+                    "minimum": 1,
+                    "maximum": 6,
+                    "description": "Number of columns in the terminal grid"
+                },
+                "workspace-grid.terminals": {
+                    "type": "array",
+                    "description": "Config for each terminal in row-major order (R1C1...R1CN, R2C1...R2CN). Extend beyond rows*columns to pre-configure more than the default grid size.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Terminal tab name"
+                            },
+                            "command": {
+                                "type": "string",
+                                "description": "Shell command to run on open"
+                            },
+                            "icon": {
+                                "type": "string",
+                                "description": "Codicon name for the terminal tab icon (e.g. 'terminal', 'server', 'database')"
+                            },
+                            "color": {
+                                "type": "string",
+                                "description": "Theme color ID for the icon (e.g. 'terminal.ansiGreen', 'terminal.ansiYellow')"
+                            }
+                        }
+                    },
+                    "default": []
+                },
+                "workspace-grid.chatRows": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 6,
+                    "description": "Number of rows in the chat grid. Defaults to workspace-grid.rows if not set."
+                },
+                "workspace-grid.chatColumns": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 6,
+                    "description": "Number of columns in the chat grid. Defaults to workspace-grid.columns if not set."
+                },
+                "workspace-grid.chatCommand": {
+                    "type": "string",
+                    "default": "claude-vscode.editor.open",
+                    "description": "VS Code command ID used to open a new AI chat panel. Find it via the Command Palette: hover the chat command and copy its ID."
+                }
+            }
+        }
+    }
+}
